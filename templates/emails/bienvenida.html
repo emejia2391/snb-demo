@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+  <body style="font-family: 'Segoe UI', Roboto, Arial, sans-serif; background-color:#f7f8fa; margin:0; padding:0;">
+    <table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,.08); margin:32px auto;">
+      <tr>
+        <td style="background-color:#0f3d3e; color:#fff; padding:24px 28px;">
+          <h1 style="margin:0;font-size:24px;">Bienvenido a {{ condominio.nombre }}</h1>
+          <p style="margin:6px 0 0; opacity:.9;">{{ condominio.direccion }}</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:28px 28px 8px; color:#333;">
+          <p style="font-size:16px; margin:0 0 10px;">Hola <b>{{ residente.nombre }} {{ residente.apellido }}</b>,</p>
+          <p style="margin:0 0 16px;">¡Nos alegra darte la bienvenida! Tu cuenta fue creada en <b>{{ condominio.nombre }}</b>.</p>
+          <table cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse; background:#f8f9fb; border-radius:8px;">
+            <tr><td style="width:35%; color:#555;">Usuario:</td><td><b>{{ residente.usuario }}</b></td></tr>
+            <tr><td style="color:#555;">Torre:</td><td>{{ residente.torre }}</td></tr>
+            <tr><td style="color:#555;">Apartamento:</td><td>{{ residente.apartamento }}</td></tr>
+            <tr><td style="color:#555;">Teléfono:</td><td>{{ residente.celular }}</td></tr>
+            <tr><td style="color:#555;">Correo registrado:</td><td>{{ residente.correo }}</td></tr>
+          </table>
+          <p style="margin:20px 0 6px;">Ingresa a la plataforma para gestionar tus reservaciones.</p>
+          <p style="margin:0;">Soporte: <a href="mailto:{{ condominio.correo }}" style="color:#0f3d3e;">{{ condominio.correo }}</a> — Tel: <b>{{ condominio.telefono }}</b></p>
+        </td>
+      </tr>
+      <tr>
+        <td style="background:#0f3d3e; color:#fff; text-align:center; font-size:13px; padding:16px 12px;">
+          © {{ year }} {{ condominio.nombre }} — {{ condominio.direccion }}
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

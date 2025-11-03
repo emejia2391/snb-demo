@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card-usuarios" style="max-width:1200px;margin:28px auto;">
+  <h2>Ver área social</h2>
+  <div class="usuarios-form" style="padding:12px 12px 18px;">
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:14px;max-width:1000px;">
+      <div><label class="label">ID</label><input class="input" type="text" value="{{ area.id_area }}" disabled></div>
+      <div><label class="label">Nombre</label><input class="input" type="text" value="{{ area.nombre }}" disabled></div>
+      <div><label class="label">Precio</label><input class="input" type="text" value="Q {{ '%.2f'|format(area.precio|float) }}" disabled></div>
+      <div><label class="label">Horas</label><input class="input" type="text" value="{{ area.horas }}" disabled></div>
+      <div style="grid-column:1/-1;"><label class="label">Hora de inicio</label><input class="input" type="text" value="{{ area.hora_inicio.strftime('%H:%M') if area.hora_inicio else '00:00' }}" disabled></div>
+      
+      <div>
+        <label class="label">Hora(s) de inicio</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          {% for t in (area.horas_inicio or []) %}
+            {% set s = (t if t is string else t.strftime('%H:%M')) %}
+            <span style="padding:4px 10px;border-radius:999px;background:#114a43;color:#cfeee8;font-weight:600;">{{ s }}</span>
+          {% else %}
+            <span class="muted">—</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div style="grid-column:1/-1;"><label class="label">Días disponibles</label>
+        <input class="input" type="text" value="{{ (area.dias | join(', ')) if (area.dias is iterable and (area.dias is not string)) else (area.dias | replace('[','') | replace(']','') | replace("'",'')) }}" disabled></div>
+
+      
+      <div style="grid-column:1/-1;">
+        <label class="label">Horas disponibles</label>
+        {% set sel = namespace(vals=[]) %}
+        {% if area and area.horarios %}
+          {% for t in area.horarios %}
+            {% set _ = sel.vals.append(t.strftime('%H:%M')) %}
+          {% endfor %}
+        {% endif %}
+        <div class="horas-grid">
+          {% for h in range(0,24) %}
+            {% set hh = "%02d:00"|format(h) %}
+            <label class="chk-item">
+              <input type="checkbox" value="{{ hh }}" disabled
+                     {% if hh in sel.vals %}checked{% endif %}>
+              <span>{{ hh }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div><label class="label">Estado</label><input class="input" type="text" value="{{ 'Habilitado' if area.estado==1 else 'Deshabilitado' }}" disabled></div>
+    </div>
+    <div style="margin-top:16px;">
+      <a class="btn btn-primary" href="{{ url_for('areas_sociales_editar', id=area.id_area) }}">Editar</a>
+      <a class="btn" href="{{ url_for('areas_sociales_list') }}">Regresar</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

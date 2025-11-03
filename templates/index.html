@@ -1,0 +1,35 @@
+
+{% extends 'base.html' %}
+{% block content %}
+  <section class="card">
+    <div class="calendar-toolbar">
+      <div class="toolbar-left">
+        <button id="prevWeek" class="btn-icon" aria-label="Semana anterior">‹</button>
+        <div id="weekRange" class="week-range">—</div>
+        <button id="rangePickerBtn" class="btn-icon" aria-label="Elegir fecha">▾</button>
+        <button id="nextWeek" class="btn-icon" aria-label="Semana siguiente">›</button>
+        <button id="todayBtn" class="btn">Hoy</button>
+      </div>
+
+      <div class="toolbar-center">
+        <select id="areaSelect" class="select">
+          {% for a in areas %}
+            <option value="{{ a.id_area }}" {% if area_id and area_id|int == a.id_area %}selected{% endif %}>{{ a.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="toolbar-right">
+        <button id="newResBtn" onclick="(function(){var s=document.getElementById('areaSelect');var id=s&&s.value;location.href='/reservas/nueva'+(id?('?area_id='+encodeURIComponent(id)):'');})()" class="btn btn-accent">Nueva reservación</button>
+      </div>
+    </div>
+
+    <!-- popover para elegir mes/año/semana -->
+    <div id="rangePopover" class="range-popover" hidden></div>
+
+
+    <div id="calendarWrapper" class="calendar-wrapper">
+      <div id="calendarGrid" class="calendar-grid" aria-label="Calendario semanal"></div>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+  <h2 style="padding:12px 14px 0 14px;">Áreas Sociales</h2>
+  <div class="areas-grid">
+    {% for a in areas %}
+    <div class="area-card">
+      <div class="area-title">{{ a.nombre }}</div>
+      <div class="area-body">
+        <div class="area-cap">Capacidad: {{ a.capacidad }} personas</div>
+        <p class="area-desc">{{ a.descripcion }}</p>
+      </div>
+      <div class="area-actions">
+        <button class="btn">Ver disponibilidad</button>
+        <button class="btn-outline">Reglamento</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

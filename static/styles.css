@@ -1,0 +1,629 @@
+
+:root{
+  --bg: #0f3a36;
+  --bg2:#0e413c;
+  --card: rgba(255,255,255,0.06);
+  --stroke: rgba(255,255,255,0.08);
+  --text:#e9f5f2;
+  --muted:#b7d1cc;
+  --accent:#1aa37a;
+}
+* { box-sizing: border-box; }
+html,body { height:100%; }
+body{
+  margin:0;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: linear-gradient(180deg, #0d3a34, #0b2f2b);
+  color: var(--text);
+}
+
+/* Topbar */
+.topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 18px; background: rgba(0,0,0,.15); border-bottom:1px solid var(--stroke);
+  position: sticky; top:0; backdrop-filter: blur(6px); z-index: 10;
+}
+.brand{ display:flex; align-items:center; gap:10px; }
+.logo-circle{
+  width:36px; height:36px; border-radius:50%;
+  background: var(--accent); color:#08221f; font-weight:800; display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 4px 10px rgba(0,0,0,.25);
+}
+.brand-text{ line-height:1; }
+.brand-top{ font-size:12px; letter-spacing:.12em; opacity:.9; }
+.brand-bottom{ font-size:14px; font-weight:700; letter-spacing:.08em; }
+
+.menu a{
+  color: var(--muted); text-decoration:none; margin:0 10px; font-weight:500;
+  padding:6px 10px; border-radius:10px;
+}
+.menu a.active, .menu a:hover{ color: var(--text); background: rgba(255,255,255,.06); }
+
+.userbox{ color: var(--muted); display:flex; align-items:center; gap:8px; }
+.userbox .salir{ color: var(--text); margin-left:8px; text-decoration:none; background: rgba(255,255,255,.08); padding:4px 8px; border-radius:8px; }
+
+.container{ padding: 18px; }
+.card{
+  width: 95vw; max-width: 1600px; margin: 0 auto 16px auto;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.35);
+  overflow:hidden;
+}
+h2{ margin: 10px 14px; }
+h3{ margin: 10px 0; }
+
+/* Buttons */
+.btn{ background: var(--accent); color:#072520; border:none; border-radius:10px; padding:8px 12px; cursor:pointer; font-weight:600; }
+.btn-icon{ background: rgba(255,255,255,.08); color:var(--text); border:1px solid var(--stroke); border-radius:10px; width:34px; height:34px; cursor:pointer; font-size:18px; }
+.btn-outline{ background: transparent; color: var(--text); border:1px solid var(--stroke); border-radius:10px; padding:8px 12px; cursor:pointer; font-weight:600; }
+
+/* Flash */
+.flashwrap{ padding:10px 14px 0; }
+.flash{ padding:10px 12px; border-radius:10px; margin-bottom:10px; }
+.flash.ok{ background: rgba(46, 204, 113,.2); border:1px solid rgba(46,204,113,.35); }
+.flash.error{ background: rgba(231, 76, 60,.2); border:1px solid rgba(231,76,60,.35); }
+
+/* Calendar */
+.calendar-toolbar{
+  display:flex; align-items:center; justify-content:space-between;
+  background: rgba(255,255,255,.06);
+  border-bottom:1px solid var(--stroke);
+  padding: 10px;
+}
+.toolbar-left{ display:flex; gap:10px; align-items:center; }
+.week-range{ font-weight:600; opacity:.9; }
+.calendar-wrapper{ padding: 14px; }
+.calendar-grid{
+  display: grid;
+  grid-template-columns: 110px repeat(7, 1fr);
+  grid-auto-rows: 44px;
+  position: relative;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 12px;
+  background: rgba(255,255,255,.04);
+  overflow: auto;
+  max-height: 72vh;
+}
+.cal-head{
+  background: rgba(255,255,255,.06);
+  border-bottom: 1px solid var(--stroke);
+  display:flex; flex-direction:column; justify-content:center; padding:8px 10px;
+  font-weight:600; color: var(--text);
+}
+.cal-head .dayname{ opacity:.85; }
+.cal-head .daynum{ font-size:12px; color: var(--muted); }
+.hour-cell{
+  border-right:1px solid var(--stroke);
+  border-bottom:1px dashed rgba(255,255,255,.08);
+  display:flex; align-items:center; justify-content:flex-start; padding-left:10px;
+  font-size:12px; color: var(--muted);
+  background: rgba(255,255,255,.02);
+}
+.slot{
+  border-left: 1px solid var(--stroke);
+  border-bottom:1px dashed rgba(255,255,255,.08);
+  margin: 6px; border-radius: 10px;
+  background: rgba(0,0,0,.18);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+}
+.calendar-grid .sticky-header{ position: sticky; top: 0; z-index: 2; }
+.calendar-grid .sticky-hours{ position: sticky; left: 0; z-index: 3; background: rgba(255,255,255,.06); }
+
+/* Login */
+.login-body{
+  display:flex; align-items:center; justify-content:center; min-height:100vh;
+  background: linear-gradient(180deg, #0d3a34, #0b2f2b);
+}
+.login-card{
+  width: 95vw; max-width: 460px; background: rgba(255,255,255,.06);
+  border:1px solid var(--stroke); border-radius:16px; padding:18px;
+  box-shadow:0 10px 24px rgba(0,0,0,.35);
+}
+.login-brand{ display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+.login-form label{ display:block; font-size:13px; color:var(--muted); margin:8px 0 4px; }
+.login-form input{
+  width:100%; height:40px; border-radius:10px; border:1px solid var(--stroke);
+  background: rgba(0,0,0,.18); color:var(--text); padding:0 10px;
+}
+.login-btn{ width:100%; margin-top:12px; }
+.hint{ margin-top:8px; font-size:12px; color:var(--muted); text-align:center; }
+
+/* Usuarios */
+.card-usuarios{ padding:14px; }
+.usuarios-layout{ display:grid; grid-template-columns: 1fr 1.2fr; gap:16px; }
+.usuarios-form{
+  background: rgba(255,255,255,.06); border:1px solid var(--stroke); border-radius:12px;
+  padding:12px;
+}
+.usuarios-form label{ display:block; font-size:13px; color:var(--muted); margin:8px 0 4px; }
+.usuarios-form input, .usuarios-form select{
+  width:100%; height:38px; border-radius:10px; border:1px solid var(--stroke);
+  background: rgba(0,0,0,.18); color:var(--text); padding:0 10px;
+}
+.usuarios-form .two{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+.table{ width:100%; border-collapse: collapse; }
+.table th, .table td{ text-align:left; padding:10px; border-bottom:1px solid var(--stroke); color: var(--text); }
+.usuarios-list{ background: rgba(255,255,255,.06); border:1px solid var(--stroke); border-radius:12px; padding:12px; }
+
+/* Áreas */
+.areas-grid{
+  display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; padding:14px;
+}
+.area-card{
+  background: rgba(255,255,255,.06); border:1px solid var(--stroke); border-radius:14px; overflow:hidden;
+  display:flex; flex-direction:column;
+}
+.area-title{ font-weight:700; padding:12px 14px; border-bottom:1px solid var(--stroke); }
+.area-body{ padding:12px 14px; color: var(--muted); }
+.area-cap{ margin-bottom:8px; color: var(--text); }
+.area-actions{ display:flex; gap:10px; padding:12px 14px; border-top:1px solid var(--stroke); }
+
+
+/* === Brand with images === */
+.brand-img { display:flex; align-items:center; }
+.brand-wordmark{ height:28px; width:auto; display:block; }
+
+/* Login brand image */
+.login-brand.center{ justify-content:center; }
+.login-mark{ height:40px; width:auto; display:block; }
+
+/* Hide old brand text helpers if any remain */
+.brand-text, .logo-circle { display:none !important; }
+
+/* --- Usuarios: tarjeta y toolbar --- */
+.card-usuarios{
+  width: 95vw; max-width: 1180px;
+  margin: 28px auto;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(0,0,0,.35);
+  padding: 14px 18px 18px;
+}
+.card-usuarios h2{
+  margin: 4px 6px 10px;
+  font-weight: 600;
+}
+
+.usuarios-toolbar{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  background: rgba(255,255,255,.055);
+  border: 1px solid rgba(255,255,255,.08);
+  padding: 10px;
+  border-radius: 12px;
+  margin: 6px 4px 14px;
+}
+.usuarios-filtros{
+  display: grid;
+  grid-template-columns: 160px minmax(220px, 360px) 110px;
+  gap: 10px;
+  align-items: center;
+}
+.usuarios-filtros select,
+.usuarios-filtros input{
+  height: 36px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color: #fff; padding: 6px 10px;
+  outline: none;
+}
+.usuarios-filtros input::placeholder{ color: rgba(255,255,255,.6); }
+
+/* --- Botones --- */
+.btn{ display:inline-flex; align-items:center; justify-content:center;
+  height: 36px; padding: 0 14px; border-radius: 10px; border: 0; cursor: pointer;
+  text-decoration:none; font-weight:600; transition: .15s ease;
+}
+.btn-primary{
+  background: #2b7be4; color:#fff;
+  box-shadow: 0 3px 10px rgba(43,123,228,.35);
+}
+.btn-primary:hover{ filter: brightness(1.05); transform: translateY(-1px); }
+
+.btn-icon{
+  width: 34px; height: 34px;
+  display:inline-flex; align-items:center; justify-content:center;
+  border-radius: 10px; border: 0; cursor: pointer;
+  background: rgba(255,255,255,.08);
+  color:#fff; transition: .15s ease;
+}
+.btn-blue{ background:#2b7be4; box-shadow:0 3px 12px rgba(43,123,228,.35); }
+.btn-blue:hover{ filter:brightness(1.06); transform: translateY(-1px);}
+.btn-red{ background:#d64545; box-shadow:0 3px 12px rgba(214,69,69,.35); }
+.btn-red:hover{ filter:brightness(1.06); transform: translateY(-1px);}
+
+/* --- Tabla --- */
+.tabla-wrap{ overflow:auto; }
+.tabla{ width:100%; border-collapse:separate; border-spacing:0 8px; }
+.tabla thead th{
+  font-weight:600; padding:10px; text-align:left; opacity:.9;
+}
+.tabla tbody tr{
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.06);
+}
+.tabla tbody td{
+  padding:12px 10px;
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.tabla tbody tr:hover{ background: rgba(255,255,255,.055); }
+.tabla .col-acciones{ width: 140px; }
+.tabla .acciones{ display:flex; gap:8px; align-items:center; }
+.inline{ display:inline; }
+
+/* --- Badges de estado --- */
+.badge{
+  display:inline-block; padding:4px 10px; border-radius: 999px;
+  font-weight:600; font-size:.9rem;
+}
+.badge.ok{ background: rgba(57,181,74,.18); color:#B1F2C2; border:1px solid rgba(57,181,74,.35); }
+.badge.off{ background: rgba(214,69,69,.18); color:#FFC9C9; border:1px solid rgba(214,69,69,.35); }
+
+.empty{ text-align:center; opacity:.8; padding:18px 0; }
+
+
+
+/* --- Calendar Grid alignment fixes (2025-10-28) --- */
+.calendar-grid{
+  display: grid;
+  gap: 6px;
+}
+/* Remove external margins from slots so they align with hour rows */
+.slot{
+  margin: 0;
+  /* keep rounded look via internal padding instead */
+  padding: 6px;
+}
+/* Ensure hour labels align perfectly with grid rows */
+.hour-cell{
+  margin: 0;
+  padding-left: 10px;
+}
+
+
+/* === Status badges (scoped for areas sociales) === */
+.badge-status{display:inline-block;padding:4px 10px;border-radius:9999px;font-size:12px;font-weight:600;color:#fff}
+.badge-habilitado{background:#16a34a;} /* green-600 */
+.badge-deshabilitado{background:#dc2626;} /* red-600 */
+
+
+
+
+
+/* Tono consistente con la página para el filtro (verde suave) */
+.usuarios-filtros select{
+  background: rgba(26,163,122,.20); /* var(--accent) con transparencia */
+  border-color: rgba(26,163,122,.45);
+  color: #eafffb;
+}
+.usuarios-filtros select:focus{
+  background: rgba(26,163,122,.28);
+  border-color: rgba(26,163,122,.65);
+}
+
+
+/* Override (Usuarios): filtro con tono profundo del sitio */
+.usuarios-filtros select,
+.usuarios-filtros input{
+  background: #0f3a36;           /* tono profundo como en la captura */
+  border-color: rgba(255,255,255,.18);
+  color: #eafffb;
+}
+.usuarios-filtros select:focus,
+.usuarios-filtros input:focus{
+  outline: 2px solid rgba(255,255,255,.12);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.08);
+}
+/* Flecha del select (mantener legible) */
+.usuarios-filtros select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #cfe7e2 50%),
+    linear-gradient(135deg, #cfe7e2 50%, transparent 50%),
+    linear-gradient(to right, transparent, transparent);
+  background-position:
+    calc(100% - 18px) calc(50% - 4px),
+    calc(100% - 12px) calc(50% - 4px),
+    calc(100% - 36px) 0;
+  background-size: 6px 6px, 6px 6px, 1px 100%;
+  background-repeat: no-repeat;
+  padding-right: 40px; /* espacio para la flecha */
+}
+
+/* Usuarios filtros: opción del desplegable con el mismo tono oscuro */
+.usuarios-filtros select option,
+.usuarios-filtros select optgroup{
+  background: #0f3a36;   /* mismo tono del campo cerrado */
+  color: #eafffb;
+}
+
+/* WebKit dropdown popup (cuando aplica) */
+.usuarios-filtros select::-webkit-calendar-picker-indicator { filter: invert(90%); }
+
+/* Alinear ambos controles de valor */
+.usuarios-filtros .valor-control{
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: #0f3a36;
+  color: #eafffb;
+  padding: 6px 10px;
+  outline: none;
+}
+.usuarios-filtros .valor-estado {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #cfe7e2 50%),
+    linear-gradient(135deg, #cfe7e2 50%, transparent 50%),
+    linear-gradient(to right, transparent, transparent);
+  background-position:
+    calc(100% - 18px) calc(50% - 4px),
+    calc(100% - 12px) calc(50% - 4px),
+    calc(100% - 36px) 0;
+  background-size: 6px 6px, 6px 6px, 1px 100%;
+  background-repeat: no-repeat;
+  padding-right: 40px;
+}
+.usuarios-filtros .valor-estado option{
+  background: #0f3a36;
+  color: #eafffb;
+}
+
+/* --- Horarios (áreas sociales) compact grid --- */
+.horas-grid{
+  display:grid;
+  grid-template-columns: repeat(8, minmax(70px,1fr));
+  gap: 6px 10px;
+  padding: 4px 0 2px;
+}
+.chk-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size: 13px;
+  opacity:.95;
+}
+.chk-item input[type="checkbox"]{
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+/* Tighter layout for days checkboxes block too */
+.dias-grid{
+  display:grid;
+  grid-template-columns: repeat(7, minmax(100px,1fr));
+  gap: 6px 12px;
+}
+.dias-grid .chk-item input[type="checkbox"]{
+  width:16px;height:16px;border-radius:4px;
+}
+
+.toolbar-center{ display:flex; align-items:center; gap:10px; }
+.toolbar-right{ display:flex; align-items:center; }
+.select{
+  background: rgba(255,255,255,.08); border:1px solid var(--stroke); color:var(--text);
+  padding:8px 10px; border-radius:10px; min-width:260px;
+}
+.btn-accent{ background: var(--accent); color:#08221f; border:none; }
+.btn-icon{ width:34px; height:34px; border-radius:10px; border:1px solid var(--stroke); background:rgba(255,255,255,.08); color:var(--text); }
+
+/* Range popover */
+.range-popover{
+  position:absolute; z-index:20; background:#0f3632; color:var(--text);
+  border:1px solid var(--stroke); border-radius:12px; padding:10px; box-shadow:0 10px 22px rgba(0,0,0,.35);
+  margin-top:6px;
+}
+.picker-wrap{ display:grid; grid-template-columns: 1fr 180px; gap:12px; }
+.picker-cal{ display:grid; grid-template-columns: repeat(7, 32px); gap:6px; justify-content:center; }
+.picker-cal .dow{ font-size:12px; opacity:.7; text-align:center; }
+.picker-cal button{ width:32px; height:28px; border-radius:8px; border:1px solid var(--stroke); background:rgba(255,255,255,.05); color:var(--text); }
+.picker-cal button.week{ grid-column:1 / -1; height:30px; }
+.picker-side{ display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; }
+.picker-side button{ padding:6px 8px; border-radius:8px; border:1px solid var(--stroke); background:rgba(255,255,255,.05); color:var(--text); }
+.picker-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.picker-head button{ width:28px; height:28px; border-radius:8px; border:1px solid var(--stroke); background:rgba(255,255,255,.05); color:var(--text); }
+
+/* === Área Social selector: green background, white bold text === */
+#areaSelect{
+  background: var(--accent) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(0,0,0,.15);
+}
+#areaSelect:focus{
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,0,0,.08);
+}
+
+
+/* --- Today highlight --- */
+.cal-head.is-today{
+  background: var(--accent);
+  color: #08221f;
+  box-shadow: inset 0 -2px 0 0 rgba(0,0,0,.12);
+}
+.cal-head.is-today .daynum{ color: #08221f; }
+.slot.is-today-col{
+  background: rgba(255,255,255,.10);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.06);
+}
+
+/* --- Nueva Reservación --- */
+.form-grid{display:grid;gap:12px;max-width:720px;margin:12px auto;}
+.form-row{display:grid;gap:6px;}
+.lbl{font-weight:600;color:var(--text);}
+.user-picker{display:flex;gap:8px;align-items:center}
+.input, .select{height:36px;border-radius:10px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);padding:6px 10px;}
+.horas-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.hora-pill{border:1px solid var(--stroke);border-radius:999px;padding:6px 12px;background:rgba(255,255,255,.05) color:#fff;}
+.hora-pill.selected{background:var(--accent);color:#fff;border-color:transparent}
+.hora-pill.disabled{opacity:.45;pointer-events:none;color:#fff}
+.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
+.btn-secondary{background:rgba(255,255,255,.08);border:1px solid var(--stroke);padding:8px 14px;border-radius:10px;color:var(--text);text-decoration:none}
+.modal{ display:flex;align-items:center;justify-content:center;z-index:10 background: rgba(12,53,47,.85); backdrop-filter: blur(2px); }
+.modal-content{width:95vw;max-width:720px;background:rgba(255,255,255,.06);border:1px solid var(--stroke);border-radius:12px;padding:14px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.resultados{max-height:50vh;overflow:auto;border-top:1px solid var(--stroke);margin-top:8px}
+.usuario-item{padding:8px;border-bottom:1px solid rgba(255,255,255,.08);cursor:pointer}
+.usuario-item:hover{background:rgba(255,255,255,.08)}
+.muted{color:var(--muted);font-size:12px}
+
+.modal[hidden]{display:none !important}
+
+
+/* Form title spacing */
+.form-title{margin:12px 0 12px 20px}
+
+/* Inline user row */
+.user-inline{display:flex; gap:10px; align-items:center}
+.btn-small{padding:6px 10px; border-radius:10px}
+
+
+/* ---- Toast de error rojo ---- */
+.toast-error{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#c0392b;
+  color:#fff;
+  padding:14px 24px;
+  border-radius:10px;
+  box-shadow:0 6px 18px rgba(0,0,0,.3);
+  font-weight:600;
+  z-index:9999;
+  opacity:1;
+  transition:opacity 3s ease;
+}
+.toast-error.fade-out{
+  opacity:0;
+}
+
+.btn .icon{margin-right:8px;}
+
+/* Ghost button variant (white text) */
+.btn-ghost{
+  background: transparent !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,.7) !important;
+}
+.btn-ghost:hover{
+  background: rgba(255,255,255,.12) !important;
+  border-color: rgba(255,255,255,.9) !important;
+  color:#fff !important;
+}
+.btn-ghost:active{
+  transform: translateY(1px);
+}
+
+
+/* Centered modal overlay */
+.modal{ 
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 1000;
+ background: rgba(12,53,47,.85); backdrop-filter: blur(2px); }
+.modal.show{ display: flex !important; }
+.modal[hidden]{ display: none !important; }
+.modal .modal-content{width: 100%;
+  max-width: 720px;
+  
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 16px;
+  box-shadow: 0 28px 60px rgba(0,0,0,.65);
+  padding: 16px;
+   background: rgba(14,65,60,.92); }
+.modal .modal-head{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  margin-bottom: 10px;
+}
+#resultados{ max-height: 50vh; overflow:auto; border:1px solid var(--stroke); border-radius: 12px; }
+
+/* Reservation blocks (calendar) */
+.resv-block{ background:#2b7be4; color:#fff; border-radius:10px; padding:8px 10px; box-shadow:0 4px 14px rgba(0,0,0,.25); display:flex; flex-direction:column; gap:2px; z-index:2;}
+.resv-block.is-pend{ background:#e0b100; color:#fff; }
+.resv-block.is-conf{ background:#2b7be4; color:#fff; }
+.resv-title{ font-weight:700; font-size:12px; line-height:1.2 }
+.resv-sub{ font-size:11px; opacity:.95 }
+.horas-grid{ display:flex; flex-wrap:wrap; gap:10px; }
+.hora-pill{ padding:6px 12px; border-radius:22px; background:#fff; border:1px solid rgba(0,0,0,.12); cursor:pointer }
+.hora-pill.selected{ background:#16a085; color:#fff; }
+.hora-pill.disabled{ opacity:.4; pointer-events:none }
+
+
+/* Compact button utility: same feel as Filtrar */
+.btn-compact{
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  width:auto !important;
+  min-width:0;
+  padding:8px 12px; /* matches .btn padding */
+}
+
+/* --- Hard stop: evitar que los recuadros de reservas crezcan --- */
+.resv-block{height:100%; overflow:hidden;}
+.resv-title{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.resv-sub{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+
+/* --- Reglas base para títulos de reserva (multilínea con clamp si el contenedor lo permite) --- */
+.resv-block{height:100%; overflow:hidden;}
+.resv-title{font-weight:700; font-size:12px; line-height:1.2;}
+.resv-sub{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+
+/* Overrides para permitir clamp dinámico del título según altura (JS lo controla con inline styles) */
+.resv-title{white-space:normal;}
+
+/* ===== Ajustes para móvil en el header del calendario ===== */
+@media (max-width: 768px) {
+  .calendar-toolbar,
+  .calendar-header,
+  .cal-toolbar,
+  .calendar-topbar,
+  .toolbar-reservas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .calendar-toolbar > * ,
+  .calendar-header .date-range,
+  .calendar-header .area-select,
+  .calendar-header .btn-new,
+  .cal-toolbar .date-range,
+  .cal-toolbar .area-select,
+  .cal-toolbar .btn-new,
+  .toolbar-reservas .date-range,
+  .toolbar-reservas .area-select,
+  .toolbar-reservas .btn-new {
+    width: 100%;
+  }
+
+  .calendar-toolbar select,
+  .calendar-header select,
+  .cal-toolbar select,
+  .toolbar-reservas select {
+    width: 100%;
+  }
+
+  .calendar-toolbar .btn,
+  .calendar-header .btn-new,
+  .cal-toolbar .btn-new,
+  .toolbar-reservas .btn-new {
+    width: 100%;
+    text-align: center;
+  }
+}

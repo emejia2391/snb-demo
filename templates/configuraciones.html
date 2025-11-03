@@ -1,0 +1,25 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<section class="card" style="max-width:980px;margin:24px auto;">
+  <h2 class="form-title">Configuraciones</h2>
+<div class="card" style="margin-top:12px;padding:12px;border-radius:12px;">
+    <h3 style="margin:0 0 8px;">Condominio</h3>
+
+    {% if c %}
+      <div style="display:grid;grid-template-columns:180px 1fr;gap:6px 14px;margin:10px 0;">
+        <div style="opacity:.8;">Nombre</div><div><b>{{ c.nombre }}</b></div>
+        <div style="opacity:.8;">Dirección</div><div>{{ c.direccion }}</div>
+        <div style="opacity:.8;">Departamento</div><div>{{ c.departamento }}</div>
+        <div style="opacity:.8;">Municipio</div><div>{{ c.municipio }}</div>
+        <div style="opacity:.8;">Teléfono</div><div>{{ c.telefono or '-' }}</div>
+        <div style="opacity:.8;">Correo</div><div>{{ c.correo or '-' }}</div>
+      </div>
+    {% else %}
+      <p style="margin:6px 0 0;">Aún no has registrado los datos del condominio.</p>
+    {% endif %}
+
+    <a href="{{ url_for('configuraciones_condominio') }}" class="btn" style="margin-top:10px;">Editar datos del condominio</a>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card-usuarios">
+  <h2>Ver rol</h2>
+  <form class="usuarios-form">
+    <div style="padding: 12px;">
+      <div style="margin-bottom:12px">
+        <label class="label">ID</label>
+        <input type="text" class="input" value="{{ rol.id_rol }}" disabled style="width:140px;">
+      </div>
+      <div style="margin-bottom:12px; max-width:420px;">
+        <label class="label">Nombre del rol</label>
+        <input type="text" class="input" value="{{ rol.rol }}" disabled>
+      </div>
+      <div style="margin-top:16px;">
+        <a class="btn btn-primary" href="{{ url_for('roles_editar', id=rol.id_rol) }}">Editar</a>
+        <a class="btn" href="{{ url_for('roles_list') }}">Regresar</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
