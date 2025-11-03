@@ -906,15 +906,50 @@ def areas_sociales_editar(id:int):
             try:
                 conn.execute(text("""
                     UPDATE public.areas_sociales
-                    SET nombre=:nombre, precio=:precio, horas=:horas, dias=:dias, horarios=:horarios, estado=:estado, hora_inicio=:hora_inicio, horas_inicio=:horas_inicio
-                    WHERE id_area=:id
-                """), {"nombre": nombre, "precio": precio, "horas": horas, "dias": dias, "horarios": horarios, "estado": estado, "hora_inicio": hora_inicio, "horas_inicio": horas_inicio, "id": id})
+                       SET nombre = %(nombre)s,
+                           precio = %(precio)s,
+                           horas = %(horas)s,
+                           dias = %(dias)s::text[],
+                           horarios = %(horarios)s::time[],
+                           estado = %(estado)s,
+                           hora_inicio = %(hora_inicio)s,
+                           horas_inicio = %(horas_inicio)s::time[]
+                     WHERE id_area = %(id)s
+                """), {
+                    "nombre": nombre,
+                    "precio": precio,
+                    "horas": horas,
+                    "dias": dias,
+                    "horarios": horarios,
+                    "estado": estado,
+                    "hora_inicio": hora_inicio,
+                    "horas_inicio": horas_inicio,
+                    "id": id,
+                })
             except Exception:
+                # fallback: convertir a literal PG pero mantener %(...)s
                 conn.execute(text("""
                     UPDATE public.areas_sociales
-                    SET nombre=:nombre, precio=:precio, horas=:horas, dias=:dias::text[], horarios=:horarios::time[], estado=:estado, hora_inicio=:hora_inicio, horas_inicio=:horas_inicio::time[]
-                    WHERE id_area=:id
-                """), {"nombre": nombre, "precio": precio, "horas": horas, "dias": _to_pg_text_array(dias), "horarios": _to_pg_text_array(horarios), "estado": estado, "hora_inicio": hora_inicio, "horas_inicio": horas_inicio, "id": id})
+                       SET nombre = %(nombre)s,
+                           precio = %(precio)s,
+                           horas = %(horas)s,
+                           dias = %(dias)s::text[],
+                           horarios = %(horarios)s::time[],
+                           estado = %(estado)s,
+                           hora_inicio = %(hora_inicio)s,
+                           horas_inicio = %(horas_inicio)s::time[]
+                     WHERE id_area = %(id)s
+                """), {
+                    "nombre": nombre,
+                    "precio": precio,
+                    "horas": horas,
+                    "dias": _to_pg_text_array(dias),
+                    "horarios": _to_pg_text_array(horarios),
+                    "estado": estado,
+                    "hora_inicio": hora_inicio,
+                    "horas_inicio": _to_pg_text_array(horas_inicio),
+                    "id": id,
+                })
         flash("", "success"); session["_sn_toast"] = {"text": "Cambios guardados con éxito", "level": "info"}
         return redirect(url_for("areas_sociales_list"))
     except Exception as e:
