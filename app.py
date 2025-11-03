@@ -906,8 +906,15 @@ def areas_sociales_editar(id:int):
             try:
                 conn.execute(text("""
                     UPDATE public.areas_sociales
-                    SET nombre=:nombre, precio=:precio, horas=:horas, dias=:dias, horarios=:horarios, estado=:estado, hora_inicio=:hora_inicio, horas_inicio=:horas_inicio
-                    WHERE id_area=:id
+            SET nombre = %(nombre)s,
+                precio = %(precio)s,
+                horas = %(horas)s,
+                dias = %(dias)s::text[],
+                horarios = %(horarios)s::time[],
+                estado = %(estado)s,
+                hora_inicio = %(hora_inicio)s,
+                horas_inicio = %(horas_inicio)s::time[]
+            WHERE id_area = %(id)s
                 """), {"nombre": nombre, "precio": precio, "horas": horas, "dias": dias, "horarios": horarios, "estado": estado, "hora_inicio": hora_inicio, "horas_inicio": horas_inicio, "id": id})
             except Exception:
                 conn.execute(text("""
