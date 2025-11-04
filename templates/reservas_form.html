@@ -32,6 +32,12 @@
 
   /* Caja de precio (arriba a la derecha) */
   .price-box{position:absolute; top:18px; right:20px; padding:10px 14px; color:#fff; font-weight:600;}
+/* versión móvil del precio, se muestra junto al campo Área social */
+.price-box-mobile{display:none;margin-top:6px;background:rgba(255,255,255,.05);border-radius:999px;padding:4px 12px;font-size:.78rem;font-weight:500;}
+@media (max-width: 620px){
+  .price-box{display:none;}
+  .price-box-mobile{display:inline-flex;}
+}
 </style>
 
 <section class="card" style="position:relative;">
@@ -45,6 +51,7 @@
           <option value="{{ a.id_area }}" {% if selected_id_area and a.id_area == selected_id_area %}selected{% endif %}>{{ a.nombre }}</option>
         {% endfor %}
       </select>
+      <div id="priceInfoMobile" class="price-box-mobile"></div>
     </div>
 
     <div class="form-row">
