@@ -1606,7 +1606,7 @@ def usuarios_eliminar(id):
             conn.execute(text("DELETE FROM public.usuarios WHERE id_usuario=:id"), {"id": id})
         # aquí sí ya lo borró en Postgres
         flash(" ", "success")
-        session["_sn_toast"] = {"text": "Usuario eliminado.", "level": "info"}
+        session["_sn_toast"] = {"text": "Usuario1 eliminado.", "level": "info"}
     except Exception as e:
         # Si es violación de llave foránea (reservas -> usuarios), mantener tu mensaje
         msg = str(e)
