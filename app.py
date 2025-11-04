@@ -910,11 +910,29 @@ def areas_sociales_editar(id:int):
                     WHERE id_area=:id
                 """), {"nombre": nombre, "precio": precio, "horas": horas, "dias": dias, "horarios": horarios, "estado": estado, "hora_inicio": hora_inicio, "horas_inicio": horas_inicio, "id": id})
             except Exception:
+                # fallback compatible con psycopg2 en Render: mandamos literales PG ya formateados
                 conn.execute(text("""
                     UPDATE public.areas_sociales
-                    SET nombre=:nombre, precio=:precio, horas=:horas, dias=:dias::text[], horarios=:horarios::time[], estado=:estado, hora_inicio=:hora_inicio, horas_inicio=:horas_inicio::time[]
+                    SET nombre=:nombre,
+                        precio=:precio,
+                        horas=:horas,
+                        dias=:dias,
+                        horarios=:horarios,
+                        estado=:estado,
+                        hora_inicio=:hora_inicio,
+                        horas_inicio=:horas_inicio
                     WHERE id_area=:id
-                """), {"nombre": nombre, "precio": precio, "horas": horas, "dias": _to_pg_text_array(dias), "horarios": _to_pg_text_array(horarios), "estado": estado, "hora_inicio": hora_inicio, "horas_inicio": horas_inicio, "id": id})
+                """), {
+                    "nombre": nombre,
+                    "precio": precio,
+                    "horas": horas,
+                    "dias": _to_pg_text_array(dias),
+                    "horarios": _to_pg_text_array(horarios),
+                    "estado": estado,
+                    "hora_inicio": hora_inicio,
+                    "horas_inicio": _to_pg_text_array(horas_inicio),
+                    "id": id,
+                })
         flash("", "success"); session["_sn_toast"] = {"text": "Cambios guardados con éxito", "level": "info"}
         return redirect(url_for("areas_sociales_list"))
     except Exception as e:
