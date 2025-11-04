@@ -877,9 +877,9 @@ def areas_sociales_ver(id:int):
 # ------------------------------------------------------------
 # Áreas sociales (Editar)
 # ------------------------------------------------------------
-@app.route("/areas-sociales/<int:id>/editar", methods=["GET","POST"])
+@app.route("/areas-sociales/<int:id>/editar", methods=["GET", "POST"])
 @login_required
-def areas_sociales_editar(id:int):
+def areas_sociales_editar(id: int):
     if request.method == "GET":
         area = _area_fetch_one(id)
         if not area:
@@ -887,7 +887,7 @@ def areas_sociales_editar(id:int):
             return redirect(url_for("areas_sociales_list"))
         return render_template("areas_sociales_form.html", area=area, user=current_user())
 
-    # POST - actualizar
+    # POST
     nombre = (request.form.get("nombre") or "").strip()
     precio = request.form.get("precio", "0").strip()
     horas  = request.form.get("horas", "0").strip()
@@ -895,6 +895,7 @@ def areas_sociales_editar(id:int):
     horarios = request.form.getlist("horarios[]") or request.form.getlist("horarios")
     estado = int(request.form.get("estado", "1"))
     horas_inicio = request.form.getlist("horas_inicio")
+    # si te mandan una sola hora, la guardamos también en hora_inicio
     hora_inicio = (horas_inicio[0] if horas_inicio else request.form.get("hora_inicio", "00:00"))
 
     if not nombre:
@@ -904,57 +905,60 @@ def areas_sociales_editar(id:int):
     try:
         with engine.begin() as conn:
             try:
+                # intento directo con listas
                 conn.execute(text("""
                     UPDATE public.areas_sociales
-                       SET nombre = %(nombre)s,
-                           precio = %(precio)s,
-                           horas = %(horas)s,
-                           dias = %(dias)s::text[],
-                           horarios = %(horarios)s::time[],
-                           estado = %(estado)s,
-                           hora_inicio = %(hora_inicio)s,
-                           horas_inicio = %(horas_inicio)s::time[]
-                     WHERE id_area = %(id)s
+                       SET nombre      = :nombre,
+                           precio      = :precio,
+                           horas       = :horas,
+                           dias        = :dias::text[],
+                           estado      = :estado,
+                           horarios    = :horarios::time[],
+                           horas_inicio= :horas_inicio::time[],
+                           hora_inicio = :hora_inicio
+                     WHERE id_area    = :id
                 """), {
                     "nombre": nombre,
                     "precio": precio,
                     "horas": horas,
                     "dias": dias,
-                    "horarios": horarios,
                     "estado": estado,
-                    "hora_inicio": hora_inicio,
+                    "horarios": horarios,
                     "horas_inicio": horas_inicio,
+                    "hora_inicio": hora_inicio,
                     "id": id,
                 })
             except Exception:
-                # fallback: convertir a literal PG pero mantener %(...)s
+                # fallback si PG no acepta la lista tal cual
                 conn.execute(text("""
                     UPDATE public.areas_sociales
-                       SET nombre = %(nombre)s,
-                           precio = %(precio)s,
-                           horas = %(horas)s,
-                           dias = %(dias)s::text[],
-                           horarios = %(horarios)s::time[],
-                           estado = %(estado)s,
-                           hora_inicio = %(hora_inicio)s,
-                           horas_inicio = %(horas_inicio)s::time[]
-                     WHERE id_area = %(id)s
+                       SET nombre      = :nombre,
+                           precio      = :precio,
+                           horas       = :horas,
+                           dias        = :dias::text[],
+                           estado      = :estado,
+                           horarios    = :horarios::time[],
+                           horas_inicio= :horas_inicio::time[],
+                           hora_inicio = :hora_inicio
+                     WHERE id_area    = :id
                 """), {
                     "nombre": nombre,
                     "precio": precio,
                     "horas": horas,
                     "dias": _to_pg_text_array(dias),
-                    "horarios": _to_pg_text_array(horarios),
                     "estado": estado,
-                    "hora_inicio": hora_inicio,
+                    "horarios": _to_pg_text_array(horarios),
                     "horas_inicio": _to_pg_text_array(horas_inicio),
+                    "hora_inicio": hora_inicio,
                     "id": id,
                 })
-        flash("", "success"); session["_sn_toast"] = {"text": "Cambios guardados con éxito", "level": "info"}
+        flash("", "success")
+        session["_sn_toast"] = {"text": "Área social actualizada correctamente", "level": "info"}
         return redirect(url_for("areas_sociales_list"))
     except Exception as e:
         flash(f"Error al actualizar el área social: {e}", "error")
         return redirect(url_for("areas_sociales_list"))
+
 
 # ------------------------------------------------------------
 # Áreas sociales (Eliminar)
