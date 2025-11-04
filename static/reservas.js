@@ -8,6 +8,7 @@
   const horaFinWrap = document.getElementById("horaFinWrap");
   const fechaHelp = document.getElementById("fechaHelp");
   const priceInfo = document.getElementById("priceInfo");
+  const priceInfoMobile = document.getElementById("priceInfoMobile");
 
   
   async function fetchJSON(url){
@@ -59,8 +60,10 @@
         const precioNum = Number(meta.precio||0);
         if (durH>0 && !isNaN(precioNum)){
           priceInfo.textContent = `Precio por ${durH} horas Q${precioNum.toFixed(2)}`;
+          if (priceInfoMobile) priceInfoMobile.textContent = `Precio por ${durH} horas Q${precioNum.toFixed(2)}`;
         }else{
           priceInfo.textContent = '';
+          if (priceInfoMobile) priceInfoMobile.textContent = '';
         }
       }
       const dur = Number(meta.horas) || 0;
