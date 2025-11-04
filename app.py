@@ -901,44 +901,37 @@ def areas_sociales_editar(id:int):
         flash("El nombre es requerido.", "error")
         return redirect(url_for("areas_sociales_editar", id=id))
 
+    # Convertimos las listas a literales PG para evitar el error de psycopg2 en Render
+    dias_lit = _to_pg_text_array(dias)
+    horarios_lit = _to_pg_text_array(horarios)
+    horas_inicio_lit = _to_pg_text_array(horas_inicio)
+
     try:
         with engine.begin() as conn:
-            try:
-                conn.execute(text("""
-                    UPDATE public.areas_sociales
-                    SET nombre=:nombre, precio=:precio, horas=:horas, dias=:dias, horarios=:horarios, estado=:estado, hora_inicio=:hora_inicio, horas_inicio=:horas_inicio
-                    WHERE id_area=:id
-                """), {"nombre": nombre, "precio": precio, "horas": horas, "dias": dias, "horarios": horarios, "estado": estado, "hora_inicio": hora_inicio, "horas_inicio": horas_inicio, "id": id})
-            except Exception:
-                # fallback compatible con psycopg2 en Render: mandamos literales PG ya formateados
-                conn.execute(text("""
-                    UPDATE public.areas_sociales
-                    SET nombre=:nombre,
-                        precio=:precio,
-                        horas=:horas,
-                        dias=:dias,
-                        horarios=:horarios,
-                        estado=:estado,
-                        hora_inicio=:hora_inicio,
-                        horas_inicio=:horas_inicio
-                    WHERE id_area=:id
-                """), {
-                    "nombre": nombre,
-                    "precio": precio,
-                    "horas": horas,
-                    "dias": _to_pg_text_array(dias),
-                    "horarios": _to_pg_text_array(horarios),
-                    "estado": estado,
-                    "hora_inicio": hora_inicio,
-                    "horas_inicio": _to_pg_text_array(horas_inicio),
-                    "id": id,
-                })
-        flash("", "success"); session["_sn_toast"] = {"text": "Cambios guardados con éxito", "level": "info"}
+            conn.execute(text(f"""
+                UPDATE public.areas_sociales
+                   SET nombre       = :nombre,
+                       precio       = :precio,
+                       horas        = :horas,
+                       dias         = '{dias_lit}'::text[],
+                       horarios     = '{horarios_lit}'::time[],
+                       estado       = :estado,
+                       hora_inicio  = :hora_inicio,
+                       horas_inicio = '{horas_inicio_lit}'::time[]
+                 WHERE id_area      = :id
+            """), {
+                "nombre": nombre,
+                "precio": precio,
+                "horas": horas,
+                "estado": estado,
+                "hora_inicio": hora_inicio,
+                "id": id,
+            })
+        flash("", "success"); session["_sn_toast"] = {"text": "Área social actualizada correctamente", "level": "info"}
         return redirect(url_for("areas_sociales_list"))
     except Exception as e:
         flash(f"Error al actualizar el área social: {e}", "error")
         return redirect(url_for("areas_sociales_list"))
-
 # ------------------------------------------------------------
 # Áreas sociales (Eliminar)
 # ------------------------------------------------------------
