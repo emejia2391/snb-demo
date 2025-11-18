@@ -1,0 +1,38 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<section class="card" style="max-width:980px;margin:24px auto;">
+  <h2 class="form-title">Configuración del Condominio</h2>
+  <form method="POST" class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <div class="form-row" style="grid-column:1 / -1;">
+      <label class="lbl">Nombre</label>
+      <input type="text" name="nombre" class="input" required value="{{ c.nombre if c else '' }}"/>
+    </div>
+    <div class="form-row" style="grid-column:1 / -1;">
+      <label class="lbl">Dirección</label>
+      <textarea name="direccion" class="input" rows="2" required>{{ c.direccion if c else '' }}</textarea>
+    </div>
+    <div class="form-row">
+      <label class="lbl">Departamento</label>
+      <input type="text" name="departamento" class="input" required value="{{ c.departamento if c else '' }}"/>
+    </div>
+    <div class="form-row">
+      <label class="lbl">Municipio</label>
+      <input type="text" name="municipio" class="input" required value="{{ c.municipio if c else '' }}"/>
+    </div>
+    <div class="form-row">
+      <label class="lbl">Teléfono</label>
+      <input type="text" name="telefono" class="input" value="{{ c.telefono if c else '' }}"/>
+    </div>
+    <div class="form-row">
+      <label class="lbl">Correo</label>
+      <input type="email" name="correo" class="input" value="{{ c.correo if c else '' }}"/>
+    </div>
+
+    <div class="form-row" style="grid-column:1 / -1;text-align:right;margin-top:8px;">
+      <button type="submit" class="btn">Guardar</button>
+      <a href="{{ url_for('configuraciones') }}" class="btn btn-secondary" style="margin-left:6px;">Regresar</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

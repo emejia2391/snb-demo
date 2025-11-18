@@ -1,0 +1,36 @@
+/* ===== Ajustes para móvil en el header del calendario ===== */
+@media (max-width: 768px) {
+  .calendar-header,
+  .cal-toolbar,
+  .calendar-topbar,
+  .toolbar-reservas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .calendar-header .date-range,
+  .calendar-header .area-select,
+  .calendar-header .btn-new,
+  .cal-toolbar .date-range,
+  .cal-toolbar .area-select,
+  .cal-toolbar .btn-new,
+  .toolbar-reservas .date-range,
+  .toolbar-reservas .area-select,
+  .toolbar-reservas .btn-new {
+    width: 100%;
+  }
+
+  .calendar-header select,
+  .cal-toolbar select,
+  .toolbar-reservas select {
+    width: 100%;
+  }
+
+  .calendar-header .btn-new,
+  .cal-toolbar .btn-new,
+  .toolbar-reservas .btn-new {
+    width: 100%;
+    text-align: center;
+  }
+}

@@ -1,0 +1,62 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<section class="card card-usuarios">
+  <h2>Usuarios</h2>
+  <div class="usuarios-layout">
+    <form method="post" class="usuarios-form">
+      <div class="two">
+        <div>
+          <label>Nombre</label>
+          <input name="nombre" placeholder="Nombre completo">
+        </div>
+        <div>
+          <label>Email</label>
+          <input name="email" placeholder="correo@ejemplo.com" type="email">
+        </div>
+      </div>
+      <div class="two">
+        <div>
+          <label>Rol</label>
+          <select name="rol">
+            <option value="residente">Residente</option>
+            <option value="admin">Administrador</option>
+            <option value="guardia">Guardia</option>
+          </select>
+        </div>
+        <div></div>
+      </div>
+      <div class="two">
+        <div>
+          <label>Usuario</label>
+          <input name="username" placeholder="usuario" required>
+        </div>
+        <div>
+          <label>Contraseña</label>
+          <input name="password" placeholder="••••••••" required type="password">
+        </div>
+      </div>
+      <button class="btn">Crear usuario</button>
+    </form>
+
+    <div class="usuarios-list">
+      <h3>Registrados</h3>
+      <table class="table">
+        <thead>
+          <tr><th>Nombre</th><th>Usuario</th><th>Email</th><th>Rol</th></tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td>{{ u.nombre or '—' }}</td>
+            <td>{{ u.username }}</td>
+            <td>{{ u.email or '—' }}</td>
+            <td>{{ u.rol }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

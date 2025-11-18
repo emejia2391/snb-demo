@@ -1,0 +1,9 @@
+[
+  {
+    "username": "admin",
+    "password": "admin",
+    "nombre": "Administrador",
+    "rol": "admin",
+    "email": "admin@snb.local"
+  }
+]

@@ -1,0 +1,37 @@
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ingreso — SNB</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="login-body">
+    <div class="login-card">
+      <div class="login-brand center">
+        <img src="{{ url_for('static', filename='img/snb-mark.png') }}" alt="SNB" class="login-mark">
+      </div>
+      {% with msgs = get_flashed_messages(with_categories=true) %}
+        {% if msgs %}
+          <div class="flashwrap">
+            {% for cat,msg in msgs %}
+              <div class="flash {{cat}}">{{ msg }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <form method="post" class="login-form">
+        <label>Usuario</label>
+        <input name="username" placeholder="usuario" autocomplete="username" required>
+        <label>Contraseña</label>
+        <input name="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+        <button class="btn login-btn" type="submit">Entrar</button>
+             </form>
+    </div>
+    <div class="login-footer" style="position:fixed;bottom:12px;left:0;right:0;text-align:center;font-size:12px;opacity:.9;color:#e8f0f2;">Copyright © 2025. Un producto de JL Desarrollo</div>
+  </body>
+</html>

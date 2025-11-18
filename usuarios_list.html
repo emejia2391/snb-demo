@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="card-usuarios">
+  <h2>Usuarios</h2>
+
+  <div class="usuarios-toolbar">
+    <form method="get" class="usuarios-filtros" action="{{ url_for('usuarios_list') }}">
+      {% set filtro = request.args.get('filtro', '') %}
+
+      <select name="filtro" id="filtro-select">
+        <option value="">Ningún filtro</option>
+        <option value="nombre"   {{ 'selected' if request.args.get('filtro')=='nombre'   else '' }}>Nombre</option>
+        <option value="apellido" {{ 'selected' if request.args.get('filtro')=='apellido' else '' }}>Apellido</option>
+        <option value="correo"   {{ 'selected' if request.args.get('filtro')=='correo'   else '' }}>Correo</option>
+        <option value="usuario"  {{ 'selected' if request.args.get('filtro')=='usuario'  else '' }}>Usuario</option>
+        <option value="torre"    {{ 'selected' if request.args.get('filtro')=='torre'    else '' }}>Torre</option>
+        <option value="apto"     {{ 'selected' if request.args.get('filtro')=='apto'     else '' }}>Apartamento</option>
+        <option value="estado"   {{ 'selected' if request.args.get('filtro')=='estado'   else '' }}>Estado</option>
+      </select>
+
+      {% set is_estado = (filtro == "estado") %}
+{% set val = request.args.get("valor","") %}
+      <input type="text" id="valor-text"              class="valor-control valor-text"              placeholder="Valor"              value="{{ val if not is_estado else '' }}"              name="valor" {{ "disabled" if is_estado else "" }}              style="{{ 'display:none;' if is_estado else '' }}" />
+      <select id="valor-estado"               class="valor-control valor-estado"               {{ "" if is_estado else "disabled" }}               name="{{ 'valor' if is_estado else '_valor_estado' }}"               style="{{ '' if is_estado else 'display:none;' }}">
+        <option value="Habilitado" {{ "selected" if val=="Habilitado" else "" }}>Habilitado</option>
+        <option value="Inhabilitado" {{ "selected" if val=="Inhabilitado" else "" }}>Inhabilitado</option>
+      </select>
+      <script>
+      (function(){
+        const filtroSel = document.getElementById("filtro-select");
+        const vText = document.getElementById("valor-text");
+        const vEstado = document.getElementById("valor-estado");
+        function sync(){
+          const isEstado = (filtroSel.value === "estado");
+          if(isEstado){
+            // show select, hide input
+            vEstado.style.display = "";
+            vEstado.disabled = false;
+            vEstado.name = "valor";
+            vText.style.display = "none";
+            vText.disabled = true;
+            vText.name = "_valor_text";
+          }else{
+            vText.style.display = "";
+            vText.disabled = false;
+            vText.name = "valor";
+            vEstado.style.display = "none";
+            vEstado.disabled = true;
+            vEstado.name = "_valor_estado";
+          }
+        }
+        filtroSel.addEventListener("change", function(){
+          // clear any current value when the filter changes
+          vText.value = "";
+          vEstado.selectedIndex = 0;
+          sync();
+        });
+        // Ensure on load as well
+        sync();
+      })();
+      </script>
+
+
+      <button class="btn btn-primary" type="submit">Filtrar</button></form>
+      <a href="{{ url_for('usuarios_nuevo') }}" class="btn btn-primary" style="margin-left:14px;">Nuevo usuario</a>
+
+
+    <div class="usuarios-pager" style="display:flex;gap:6px;align-items:center;justify-content:flex-start;">
+      <a class="btn btn-secondary{% if page==1 %} disabled{% endif %}" href="{{ qs_with_page(1) }}">&laquo;&laquo;</a>
+      <a class="btn btn-secondary{% if page==1 %} disabled{% endif %}" href="{{ qs_with_page(page-1 if page>1 else 1) }}">&lsaquo;</a>
+      <a class="btn btn-secondary{% if page==pages %} disabled{% endif %}" href="{{ qs_with_page(page+1 if page<pages else pages) }}">&rsaquo;</a>
+      <a class="btn btn-secondary{% if page==pages %} disabled{% endif %}" href="{{ qs_with_page(pages) }}">&raquo;&raquo;</a>
+    </div>
+
+
+    <!-- Por ahora NO navega; cuando tengas la ruta, cambia href="#" por url_for('usuarios_nuevo') --></div>
+
+  <div class="tabla-wrap">
+    <table class="tabla tabla-usuarios">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Correo</th>
+          <th>Usuario</th>
+          <th>Torre</th>
+          <th>Apartamento</th>
+          <th>Estado</th>
+          <th>Debe cambiar</th>
+          <th class="col-acciones">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for r in rows %}
+        <tr>
+          <td>{{ r.id }}</td>
+          <td>{{ r.nombre }}</td>
+          <td>{{ r.apellido }}</td>
+          <td>{{ r.correo }}</td>
+          <td>{{ r.usuario }}</td>
+          <td>{{ r.torre }}</td>
+          <td>{{ r.apartamento }}</td>
+          <td>
+            <span class="badge {{ 'ok' if r.estado in (1, '1') else 'off' }}">
+              {{ 'Habilitado' if r.estado in (1, '1') else 'Inhabilitado' }}
+            </span>
+          </td>
+          <td>
+            {# si la consulta aún no trae el campo, por defecto muestra "No" #}
+            {{ r.debe_cambiar }}</td>
+          <td class="acciones">
+  {%- set bloqueo_admin = (user and user.id_rol == 3 and r.id_rol == 1) -%}
+
+  {% if not bloqueo_admin %}
+    <a href="{{ url_for('usuarios_ver', id=r.id) }}" class="btn-icon btn-blue" title="Ver" aria-label="Ver">
+      <!-- eye -->
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 .001 6.001A3 3 0 0 0 12 9z"/>
+      </svg>
+    </a>
+
+    <a href="{{ url_for('usuarios_editar', id=r.id) }}" class="btn-icon btn-blue" title="Editar" aria-label="Editar">
+      <!-- pencil -->
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zm17.71-10.04a1.003 1.003 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.5-1.5z"/>
+      </svg>
+    </a>
+
+    <form method="post"
+          action="/usuarios/{{ r.id }}/eliminar"
+          onsubmit="return confirm('¿Eliminar al usuario #{{ r.id }}?');"
+          class="inline">
+      <button type="submit" class="btn-icon btn-red" title="Eliminar" aria-label="Eliminar">
+        <!-- trash -->
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <path d="M9 3h6l1 2h4v2H3V5h4l2-2zm1 7h2v8h-2v-8zM7 10h2v8H7v-8zm-1 11h12a2 2 0 0 0 2-2V7H4v12a2 2 0 0 0 2 2z"/>
+        </svg>
+      </button>
+    </form>
+  {% else %}
+    <!-- Botones bloqueados para operador sobre usuarios admin -->
+    <span class="btn-icon btn-blue" title="Ver" aria-disabled="true" style="pointer-events:none;opacity:.45;">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 .001 6.001A3 3 0 0 0 12 9z"/>
+      </svg>
+    </span>
+
+    <span class="btn-icon btn-blue" title="Editar" aria-disabled="true" style="pointer-events:none;opacity:.45;">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zm17.71-10.04a1.003 1.003 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.5-1.5z"/>
+      </svg>
+    </span>
+
+    <button type="button" class="btn-icon btn-red" title="Eliminar" aria-disabled="true" style="pointer-events:none;opacity:.45;">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M9 3h6l1 2h4v2H3V5h4l2-2zm1 7h2v8h-2v-8zM7 10h2v8H7v-8zm-1 11h12a2 2 0 0 0 2-2V7H4v12a2 2 0 0 0 2 2z"/>
+      </svg>
+    </button>
+  {% endif %}
+</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="10" class="empty">No hay usuarios.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

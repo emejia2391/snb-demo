@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card-usuarios">
+  <h2>Roles</h2>
+
+  <div class="usuarios-toolbar">
+    <div></div>
+    <div></div>
+    <div style="text-align:right">
+      <a class="btn btn-primary" href="{{ url_for('roles_nuevo') }}">Nuevo rol</a>
+    </div>
+  </div>
+
+  <div class="tabla-wrap">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th style="width:100px;">ID</th>
+          <th>Rol</th>
+          <th class="col-acciones">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td>{{ r.id_rol }}</td>
+          <td>{{ r.rol }}</td>
+          <td>
+            <a href="{{ url_for('roles_ver', id=r.id_rol) }}" class="btn-icon btn-blue" title="Ver" aria-label="Ver">
+              <!-- eye -->
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 .001 6.001A3 3 0 0 0 12 9z"/>
+              </svg>
+            </a>
+            <a href="{{ url_for('roles_editar', id=r.id_rol) }}" class="btn-icon btn-blue" title="Editar" aria-label="Editar">
+              <!-- pencil -->
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zm3.92 1.58H5v-1.92l9.9-9.9 1.92 1.92-9.9 9.9zM20.71 5.63a1.003 1.003 0 0 0 0-1.41l-2.34-2.34a1.003 1.003 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+              </svg>
+            </a>
+            <form method="post"
+                  action="{{ url_for('roles_eliminar', id=r.id_rol) }}"
+                  onsubmit="return confirm('¿Eliminar el rol #{{ r.id_rol }}?');"
+                  class="inline">
+              <button type="submit" class="btn-icon btn-red" title="Eliminar" aria-label="Eliminar">
+                <!-- trash -->
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M3 6h18v2H3V6zm2 3h14l-1.2 12.6c-.1 1-1 1.8-2 1.8H8.2c-1 0-1.9-.8-2-1.8L5 9zm5-5h4l1 1H9l1-1z"/>
+                </svg>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="empty">No hay roles registrados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

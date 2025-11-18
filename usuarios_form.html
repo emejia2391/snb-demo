@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Estilos finos SOLO para esta tarjeta (no afecta otros módulos) -->
+<style>
+  .card-usuarios .form-grid{display:block}
+  .card-usuarios .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}
+  .card-usuarios .row-1{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:12px}
+  .card-usuarios .field{display:flex;flex-direction:column;gap:6px}
+  .card-usuarios label{color:#cfe1dc;font-weight:600}
+  .card-usuarios .input,
+  .card-usuarios select.input{
+    width:100%;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.06);color:#e5f3ef;padding:10px 14px;outline:none;
+  }
+  .card-usuarios .input::placeholder{color:rgba(255,255,255,.55)}
+  .card-usuarios select.input{appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:
+    linear-gradient(45deg, transparent 50%, rgba(255,255,255,.7) 50%),
+    linear-gradient(135deg, rgba(255,255,255,.7) 50%, transparent 50%),
+    linear-gradient(to right, rgba(255,255,255,.14), rgba(255,255,255,.14));
+    background-position: calc(100% - 18px) calc(50% - 4px), calc(100% - 12px) calc(50% - 4px), calc(100% - 44px) 50%;
+    background-size: 6px 6px, 6px 6px, 1px 60%; background-repeat:no-repeat;
+  }
+  /* color verde en el desplegable */
+  .card-usuarios select.input option{background:#173f37;color:#e6f3ef}
+  .card-usuarios .help-text{font-size:12px;color:rgba(255,255,255,.65);margin-top:4px}
+  .card-usuarios .check-wrap{display:flex;align-items:center;height:44px}
+  .card-usuarios .form-actions{display:flex;gap:10px;justify-content:flex-start;margin-top:6px}
+</style>
+
+<section class="card card-usuarios">
+  <h2>{{ 'Editar usuario' if edit else 'Nuevo usuario' }}</h2>
+
+  <form method="post" class="form-grid">
+    <!-- Fila 1: Nombre / Apellido -->
+    <div class="row">
+      <div class="field">
+        <label>Nombre</label>
+        <input class="input" name="nombre" placeholder="Ej. Ana" required value="{{ u.nombre if edit else '' }}">
+      </div>
+      <div class="field">
+        <label>Apellido</label>
+        <input class="input" name="apellido" placeholder="Ej. López" required value="{{ u.apellido if edit else '' }}">
+      </div>
+    </div>
+
+    <!-- Fila 2: Correo / Usuario -->
+    <div class="row">
+      <div class="field">
+        <label>Correo</label>
+        <input class="input" name="correo" type="email" placeholder="nombre@correo.com" required value="{{ u.correo if edit else '' }}">
+      </div>
+      <div class="field">
+        <label>Usuario</label>
+        <input class="input" name="usuario" placeholder="Ej. analopez" required value="{{ u.usuario if edit else '' }}">
+      </div>
+    </div>
+
+    <!-- Fila 3: Celular / Rol -->
+    <div class="row">
+      <div class="field">
+        <label>Celular</label>
+        <input class="input" name="celular" placeholder="Ej. 55555555" pattern="^\d{8}$" title="Debe ingresar exactamente 8 dígitos numéricos" maxlength="8" inputmode="numeric" required value="{{ u.celular if edit else '' }}">
+      </div>
+      <div class="field">
+        <label>Rol</label>
+        <select class="input" name="id_rol" required>
+          <option value="">— Elegir —</option>
+          {% for r in roles %}
+            {% if not (user and user.id_rol == 3 and (r.id_rol == 1 or r.nombre|lower == 'admin')) %}
+              <option value="{{ r.id_rol }}" {{ 'selected' if edit and (u.id_rol==r.id_rol) else '' }}>{{ r.nombre }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <!-- Fila 4: Torre / Apartamento -->
+    <div class="row">
+      <div class="field">
+        <label>Torre</label>
+        <select class="input" name="torre">
+          <option value="">— Elegir —</option>
+          {% for t in torres %}
+            <option value="{{ t }}" {{ 'selected' if edit and (u.torre==t) else '' }}>{{ t }}</option>
+          {% endfor %}
+        </select>
+        <div class="help-text">Requerido solo si el rol es <b>Residente</b>.</div>
+      </div>
+      <div class="field">
+        <label>Apartamento</label>
+        <input class="input" name="apartamento" placeholder="Ej. 3B" value="{{ u.apartamento if edit else '' }}">
+      </div>
+    </div>
+
+    <!-- Fila 5: Password a ancho completo -->
+    <div class="row-1">
+      <div class="field">
+        <label>Contraseña (dejar vacío para no cambiar)</label>
+        <input class="input" name="password" type="password" autocomplete="new-password" placeholder="********">
+      </div>
+    </div>
+
+    <!-- Fila 6: Estado / Checkbox -->
+    <div class="row">
+      <div class="field">
+        <label>Estado</label>
+        <select class="input" name="estado">
+          {% for val, txt in estados %}
+            <option value="{{ val }}" {{ 'selected' if edit and (u.estado==val) else '' }}>{{ txt }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field check-wrap">
+        <label style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" name="debe_cambiar" {{ 'checked' if edit and (u.debe_cambiar_password in (1,True,'1','t','true','True')) else '' }}>
+          Requerir cambio de contraseña al ingresar
+        </label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <a href="{{ url_for('usuarios_list') }}" class="btn">Cancelar</a>
+      <button class="btn btn-primary" type="submit">{{ 'Guardar cambios' if edit else 'Crear usuario' }}</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

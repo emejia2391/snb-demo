@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>San Nicolás del Bosque — Reservaciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand brand-img">
+        <img src="{{ url_for('static', filename='img/snb-wordmark.png') }}" alt="San Nicolás del Bosque" class="brand-wordmark">
+      </div>
+      <nav class="menu">
+        <a class="{{ 'active' if request.path=='/' else '' }}" href="{{ url_for('index') }}">Inicio</a>{% if not user or user.id_rol not in [2,4] %}
+        <a class="btn-nav {{ 'active' if request.path.startswith('/usuarios') else '' }}" href="{{ url_for('usuarios_list') }}">Usuarios</a>
+        {% endif %}{% if not user or user.id_rol not in [2,4] %}<a class="btn-nav {{ 'active' if request.path.startswith('/areas-sociales') else '' }}" href="{{ url_for('areas_sociales_list') }}">Área Social{% endif %}</a>
+                {% if not (user and user.id_rol == 3) %}{% if not user or user.id_rol not in [2,4] %}{% if not user or user.id_rol not in [2,3,4] %}
+<a class="btn-nav {{ 'active' if request.path.startswith('/roles') else '' }}" href="{{ url_for('roles_list') }}">Roles</a>
+{% endif %}{% endif %}{% endif %}
+      </nav>
+      <div class="userbox">
+        {% if user %}
+          <div class="user-menu">
+            <button type="button" class="user-menu-toggle">
+              <span class="user-menu-label">Usuario:</span>
+              <strong class="user-menu-name">{{ user.nombre or user.username }}</strong>
+              <span class="user-menu-arrow">▾</span>
+            </button>
+            <div class="user-menu-dropdown">
+              <a class="user-menu-item" href="{{ url_for('cambiar_password') }}">Cambio de contraseña</a>
+              <a class="user-menu-item" href="{{ url_for('logout') }}">Salir</a>
+            </div>
+          </div>
+        {% else %}
+          <a class="salir" href="{{ url_for('login') }}">Entrar</a>
+        {% endif %}
+      </div>
+    </header>
+    <main class="container">
+      {% with msgs = get_flashed_messages(with_categories=true) %}
+        {% if msgs %}
+          <div class="flashwrap">
+            {% for cat,msg in msgs %}
+              <div class="flash {{cat}}">{{ msg }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+
+    <script>
+      // Exponer id_rol del usuario actual (para reglas de UI sin cambiar el look)
+      window.SNB_USER_ROLE_ID = {{ user.id_rol if user else 'null' }};
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>
