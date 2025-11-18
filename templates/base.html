@@ -24,8 +24,17 @@
       </nav>
       <div class="userbox">
         {% if user %}
-          <span>Usuario:</span> <strong>{{ user.nombre or user.username }}</strong>
-          <a class="salir" href="{{ url_for('logout') }}">Salir</a>
+          <div class="user-menu">
+            <button type="button" class="user-menu-toggle">
+              <span class="user-menu-label">Usuario:</span>
+              <strong class="user-menu-name">{{ user.nombre or user.username }}</strong>
+              <span class="user-menu-arrow">▾</span>
+            </button>
+            <div class="user-menu-dropdown">
+              <a class="user-menu-item" href="{{ url_for('cambiar_password') }}">Cambio de contraseña</a>
+              <a class="user-menu-item" href="{{ url_for('logout') }}">Salir</a>
+            </div>
+          </div>
         {% else %}
           <a class="salir" href="{{ url_for('login') }}">Entrar</a>
         {% endif %}

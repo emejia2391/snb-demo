@@ -613,3 +613,21 @@ function openResvInfo(block){
   body.innerHTML = `<p style="margin:0 0 6px 0;"><b>${nombre}</b></p><p style="margin:0 0 6px 0;">${sub}</p><p style="margin:0;">${fecha} — ${ini} a ${fin}</p>`;
   document.getElementById("resvInfoOverlay").style.display="block";
 }
+
+// Toggle menú de usuario (flecha con opciones)
+(function(){
+  var menu = document.querySelector(".user-menu");
+  if (!menu) return;
+  var toggle = menu.querySelector(".user-menu-toggle");
+  var dropdown = menu.querySelector(".user-menu-dropdown");
+  if (!toggle || !dropdown) return;
+
+  toggle.addEventListener("click", function(ev){
+    ev.stopPropagation();
+    menu.classList.toggle("open");
+  });
+
+  document.addEventListener("click", function(){
+    menu.classList.remove("open");
+  });
+})();
